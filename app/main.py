@@ -2,7 +2,7 @@
 from app.agent import perguntar_ao_modelo
 from app.evaluator import avaliar_resposta
 from app.challenges import desafios
-
+from app.memory import salvar_resultado
 
 def executar_experimentos():
     total = len(desafios)
@@ -22,6 +22,18 @@ def executar_experimentos():
 
         print(f"Resposta do modelo: {resposta}")
         print(f"Resultado: {'PASSED' if aprovado else 'FAILED'}")
+
+        registro = {
+            "modelo": "qwen2.5:1.5b",
+            "desafio": desafio["id"],
+            "pergunta": desafio["pergunta"],
+            "resposta": resposta,
+            "esperado": desafio["esperado"],
+            "aprovado": aprovado
+        }
+
+        arquivo = salvar_resultado(registro)
+        print(f"Resultado salvo em: {arquivo}")
 
         if aprovado:
             aprovados += 1
