@@ -1,25 +1,36 @@
 
 from app.agent import perguntar_ao_modelo
 from app.evaluator import avaliar_resposta
+from app.challenges import desafios
 
 
-def executar_experimento():
-    pergunta = "Quanto é 15 + 27? Responda apenas com o número."
-    resultado_esperado = 42
+def executar_experimentos():
+    total = len(desafios)
+    aprovados = 0
 
-    print("Iniciando experimento...")
+    print("Iniciando bateria de testes do AI Sandbox...")
 
-    resposta = perguntar_ao_modelo(pergunta)
+    for desafio in desafios:
+        print(f"\nExecutando: {desafio['id']}")
 
-    print("Resposta do modelo:", resposta)
+        resposta = perguntar_ao_modelo(desafio["pergunta"])
 
-    aprovado = avaliar_resposta(resposta, resultado_esperado)
+        aprovado = avaliar_resposta(
+            resposta,
+            desafio["esperado"]
+        )
 
-    if aprovado:
-        print("Resultado: PASSED")
-    else:
-        print("Resultado: FAILED")
+        print(f"Resposta do modelo: {resposta}")
+        print(f"Resultado: {'PASSED' if aprovado else 'FAILED'}")
+
+        if aprovado:
+            aprovados += 1
+
+    print("\n--- RESUMO ---")
+    print(f"Total de testes: {total}")
+    print(f"Aprovados: {aprovados}")
+    print(f"Reprovados: {total - aprovados}")
 
 
 if __name__ == "__main__":
-    executar_experimento()
+    executar_experimentos()
