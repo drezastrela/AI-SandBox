@@ -3,7 +3,7 @@ from app.agent import perguntar_ao_modelo
 from app.evaluator import avaliar_resposta
 from app.challenges import desafios
 from app.memory import salvar_resultado
-
+from app.dialogue import preparar_feedback
 def executar_experimentos():
     total = len(desafios)
     aprovados = 0
@@ -42,6 +42,24 @@ def executar_experimentos():
     print(f"Total de testes: {total}")
     print(f"Aprovados: {aprovados}")
     print(f"Reprovados: {total - aprovados}")
+
+
+def executar_correcao(pergunta, resposta_anterior, feedback):
+    print("\n--- INICIANDO CICLO DE CORREÇÃO ---")
+
+    mensagem = preparar_feedback(
+        pergunta,
+        resposta_anterior,
+        feedback
+    )
+
+    resposta_corrigida = perguntar_ao_modelo(mensagem)
+
+    print("Resposta após feedback:")
+    print(resposta_corrigida)
+
+    return resposta_corrigida
+
 
 
 if __name__ == "__main__":
