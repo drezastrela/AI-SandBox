@@ -1,6 +1,6 @@
 
 from app.agent import perguntar_ao_modelo
-from app.evaluator import avaliar_resposta
+from app.evaluator import avaliar_resposta, encontrar_igualdades
 from app.challenges import desafios
 from app.memory import salvar_resultado
 from app.dialogue import preparar_feedback
@@ -55,10 +55,28 @@ def executar_correcao(pergunta, resposta_anterior, feedback):
 
     resposta_corrigida = perguntar_ao_modelo(mensagem)
 
+ 
     print("Resposta após feedback:")
     print(resposta_corrigida)
 
+    print("\n--- AVALIAÇÃO MATEMÁTICA ---")
+
+    igualdades = encontrar_igualdades(resposta_corrigida)
+
+    if not igualdades:
+        print("Nenhuma igualdade de adição reconhecida.")
+        print("Avaliação inconclusiva.")
+    else:
+        for item in igualdades:
+            print(f"Expressão: {item['expressao']}")
+
+            if item["correta"]:
+                print("Resultado: CORRETA")
+            else:
+                print("Resultado: INCORRETA")
+
     return resposta_corrigida
+
 
 
 
